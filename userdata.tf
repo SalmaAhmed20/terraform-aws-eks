@@ -13,8 +13,8 @@ data "template_cloudinit_config" "usrdata-script" {
       sudo mkdir /home/ubuntu/.aws
       touch /home/ubuntu/.aws/credentials /home/ubuntu/.aws/config
       echo [default] > /home/ubuntu/.aws/credentials
-      echo 'aws_access_key_id = AKIAUKN6Q6FU7425AQ4N' >> /home/ubuntu/.aws/credentials
-      echo 'aws_secret_access_key = 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' >> /home/ubuntu/.aws/credentials
+      echo 'aws_access_key_id = ' >> /home/ubuntu/.aws/credentials
+      echo 'aws_secret_access_key = ' >> /home/ubuntu/.aws/credentials
       echo [default] > /home/ubuntu/.aws/config
       echo "region = eu-west-1" >>/home/ubuntu/.aws/config
       apt-get update

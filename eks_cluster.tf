@@ -1,3 +1,6 @@
+resource "aws_kms_key" "eks-kms" {
+  description             = "KMS key 1"
+}
 resource "aws_eks_cluster" "private-eks-cluster" {
   name     = var.eks_name
   role_arn = aws_iam_role.eks-iam-role.arn
@@ -9,7 +12,9 @@ resource "aws_eks_cluster" "private-eks-cluster" {
     security_group_ids      = [aws_security_group.eks-sg.id]
   }
   encryption_config {
-    provider = "aws-kms"
+    provider {
+     key_arn = aws_kms_key.eks-kms.arn
+    }
     resources = ["secrets"]
   }
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.

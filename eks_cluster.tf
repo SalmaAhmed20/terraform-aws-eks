@@ -10,9 +10,7 @@ resource "aws_eks_cluster" "private-eks-cluster" {
   }
   encryption_config {
     provider = "aws-kms"
-    resources {
-      secrets = true
-    }
+    resources = ["secrets"]
   }
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
   # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.

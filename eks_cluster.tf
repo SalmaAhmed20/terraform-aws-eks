@@ -5,11 +5,15 @@ resource "aws_eks_cluster" "private-eks-cluster" {
   vpc_config {
     endpoint_public_access  = false
     endpoint_private_access = true
-    subnet_ids              = [module.vpc_eks.PRIV_SUBNET_ID1, module.vpc_eks.PRIV_SUBNET_ID2]
+    subnet_ids              = [var.PRIV_SUBNET_ID1, var.PRIV_SUBNET_ID2]
     security_group_ids      = [aws_security_group.eks-sg.id]
   }
-
-
+  encryption_config {
+    provider = "aws-kms"
+    resources {
+      secrets = true
+    }
+  }
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
   # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.
   depends_on = [
@@ -29,7 +33,7 @@ resource "aws_eks_node_group" "private-eks-nodes" {
   cluster_name    = aws_eks_cluster.private-eks-cluster.name
   node_group_name = "private-eks-nodegroup"
   node_role_arn   = aws_iam_role.nodes-eks.arn
-  subnet_ids      = [module.vpc_eks.PRIV_SUBNET_ID1, module.vpc_eks.PRIV_SUBNET_ID2]
+  subnet_ids      = [var.PRIV_SUBNET_ID1, var.PRIV_SUBNET_ID2]
 
   scaling_config {
     desired_size = 1

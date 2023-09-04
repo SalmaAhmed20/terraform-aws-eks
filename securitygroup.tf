@@ -1,10 +1,10 @@
 resource "aws_security_group" "eks-sg" {
-  vpc_id = module.vpc_eks.VPC_ID
+  vpc_id = var.VPC_ID
   ingress {
     cidr_blocks = [
-      module.vpc_eks.VPC_CIDR,
+      var.VPC_CIDR,
     ]
-    
+
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
@@ -17,7 +17,7 @@ resource "aws_security_group" "eks-sg" {
   }
 }
 resource "aws_security_group" "security_group1" {
-  vpc_id = module.vpc_eks.VPC_ID
+  vpc_id = var.VPC_ID
   ingress {
     cidr_blocks = [
       "0.0.0.0/0"

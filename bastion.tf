@@ -15,7 +15,7 @@ resource "aws_instance" "bastion" {
   ami                         = var.AMI
   instance_type               = var.INSTANCE_TYPE
   key_name                    = "tf-key-pair"
-  subnet_id                   = module.vpc_eks.PUB_SUBNET_ID
+  subnet_id                   = var.PUB_SUBNET_ID
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.security_group1.id]
   user_data                   = data.template_cloudinit_config.usrdata-script.rendered

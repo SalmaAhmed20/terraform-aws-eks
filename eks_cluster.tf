@@ -4,7 +4,7 @@ resource "aws_kms_key" "eks-kms" {
 resource "aws_eks_cluster" "private-eks-cluster" {
   name     = var.eks_name
   role_arn = aws_iam_role.eks-iam-role.arn
-
+  
   vpc_config {
     endpoint_public_access  = false
     endpoint_private_access = true
@@ -39,9 +39,9 @@ resource "aws_eks_node_group" "private-eks-nodes" {
   subnet_ids      = [var.PRIV_SUBNET_ID1, var.PRIV_SUBNET_ID2]
 
   scaling_config {
-    desired_size = 3
-    max_size     = 5
-    min_size     = 3
+    desired_size = var.DESIRED_SIZE
+    max_size     = var.MAX_SIZE
+    min_size     = var.MIN_SIZE
   }
 
   update_config {
@@ -58,4 +58,13 @@ resource "aws_eks_node_group" "private-eks-nodes" {
   provisioner "local-exec" {
     command = "aws eks update-kubeconfig --region eu-west-1 --name ${var.eks_name}"
   }
+}
+data "tls_certificate" "tls_cert" {
+  url = aws_eks_cluster.private-eks-cluster.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "oicd" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.tls_cert.certificates[0].sha1_fingerprint]
+  url             = data.tls_certificate.tls_cert.url
 }

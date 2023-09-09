@@ -30,3 +30,18 @@ variable "VPC_ID" {
   description = "VPC ID"
   type        = string
 }
+variable "DESIRED_SIZE" {
+  description = "number of instances that deployed by default"
+  type = number
+  default = 3
+}
+variable "MAX_SIZE" {
+  description = "Scale Up too no# instances"
+  type = number
+  default = 5
+}
+variable "MIN_SIZE" {
+  description = "Scale down too no# instances"
+  type = number
+  default = 3
+}
